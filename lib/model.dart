@@ -9,8 +9,12 @@ class TodoList {
   List<Todo> data = [];
   int count = 0;
 
-  TodoList() {
-    this.data = [Todo(0, "完成课堂作业"), Todo(1, "看课件预习")];
+  TodoList(List<String> contents) {
+    List<Todo> data = [];
+    for (int i = 0; i < contents.length; i++) {
+      data.add(Todo(i, contents[i]));
+    }
+    this.data = data;
   }
 
   void insert(String content) {
@@ -23,10 +27,28 @@ class TodoList {
       return todo.number == number;
     });
   }
-
-  void display() {
-    for (final todo in data) {
-      print("${todo.number} ${todo.content}");
-    }
-  }
 }
+
+TodoList todoList = TodoList([
+  "Todo0",
+  "Todo1",
+  "Todo2",
+  "Todo3",
+  "Todo4",
+  "Todo5",
+  "Todo6",
+  "Todo7",
+  "Todo8",
+  "Todo9",
+  "Todo10",
+  "Todo11",
+  "Todo12",
+  "Todo13",
+  "Todo14",
+  "Todo15",
+  "Todo16",
+  "Todo17",
+  "Todo18",
+  "Todo19",
+  "Todo20"
+]);
