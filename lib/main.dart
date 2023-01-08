@@ -38,8 +38,22 @@ class ContentWidget extends StatelessWidget {
   }
 }
 
-class AddTodoWidget extends StatelessWidget {
+class AddTodoWidget extends StatefulWidget {
   AddTodoWidget({super.key});
+
+  @override
+  State<AddTodoWidget> createState() => _AddTodoWidgetState();
+}
+
+class _AddTodoWidgetState extends State<AddTodoWidget> {
+  final textFieldController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    textFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +61,7 @@ class AddTodoWidget extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            controller: textFieldController,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: '新 Todo 的内容',
@@ -55,7 +70,7 @@ class AddTodoWidget extends StatelessWidget {
         ),
         TextButton(
             onPressed: () {
-              debugPrint("添加按钮按下");
+              debugPrint("添加按钮按下 内容为${textFieldController.text}");
             },
             child: Text(
               "添加",
