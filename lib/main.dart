@@ -24,11 +24,9 @@ class ContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          TodoWidget(content: todoList.data[0].content),
-          TodoWidget(content: todoList.data[1].content),
-        ],
+      child: ListView(
+        children:
+            todoList.data.map((e) => TodoWidget(content: e.content)).toList(),
       ),
     );
   }
