@@ -1,44 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'model.dart';
 
 void main() {
   runApp(MyApp(defaultTodoContents: defaultTodoContents));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   final List<String> defaultTodoContents;
-
-  MyApp({super.key, required this.defaultTodoContents});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late TodoList todoList;
-
-  @override
-  initState() {
-    super.initState();
-
-    todoList = TodoList(widget.defaultTodoContents);
-  }
-
-  void insert(String content) {
-    setState(() {
-      todoList.data.add(Todo(todoList.count, content));
-    });
-    todoList.count += 1;
-  }
+  const MyApp({super.key, required this.defaultTodoContents});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "TodoApp",
       home: Scaffold(
-          body: ContentWidget(
-        todoList: todoList,
-        insert: insert,
+          body: ChangeNotifierProvider(
+        create: (context) => TodoListModel(defaultTodoContents),
+        child: ContentWidget(),
       )),
       debugShowCheckedModeBanner: false,
     );
@@ -46,36 +25,29 @@ class _MyAppState extends State<MyApp> {
 }
 
 class ContentWidget extends StatelessWidget {
-  final TodoList todoList;
-  final ValueChanged<String> insert;
-
-  ContentWidget({super.key, required this.todoList, required this.insert});
+  ContentWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: ListView(
-            children: todoList.data
-                .map((e) => TodoWidget(content: e.content))
-                .toList(),
-          ),
+          child: Consumer<TodoListModel>(builder: (context, model, child) {
+            return ListView(
+              children: model.data
+                  .map((todo) => TodoWidget(content: todo.content))
+                  .toList(),
+            );
+          }),
         ),
-        AddTodoWidget(
-          todoList: todoList,
-          insert: insert,
-        )
+        AddTodoWidget()
       ],
     );
   }
 }
 
 class AddTodoWidget extends StatefulWidget {
-  final TodoList todoList;
-  final ValueChanged<String> insert;
-
-  AddTodoWidget({super.key, required this.todoList, required this.insert});
+  AddTodoWidget({super.key});
 
   @override
   State<AddTodoWidget> createState() => _AddTodoWidgetState();
@@ -104,16 +76,18 @@ class _AddTodoWidgetState extends State<AddTodoWidget> {
             ),
           ),
         ),
-        TextButton(
-            onPressed: () {
-              debugPrint("添加按钮按下 内容为${textFieldController.text}");
-              widget.insert(textFieldController.text);
-              textFieldController.text = "";
-            },
-            child: Text(
-              "添加",
-              style: TextStyle(fontSize: 24),
-            ))
+        Consumer<TodoListModel>(builder: (context, model, child) {
+          return TextButton(
+              onPressed: () {
+                debugPrint("添加按钮按下 内容为${textFieldController.text}");
+                model.insert(textFieldController.text);
+                textFieldController.text = "";
+              },
+              child: Text(
+                "添加",
+                style: TextStyle(fontSize: 24),
+              ));
+        })
       ],
     );
   }
