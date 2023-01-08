@@ -34,13 +34,40 @@ class ContentWidget extends StatelessWidget {
         Expanded(
           child: Consumer<TodoListModel>(builder: (context, model, child) {
             return ListView(
-              children: model.data
-                  .map((todo) => TodoWidget(content: todo.content))
-                  .toList(),
+              children:
+                  model.data.map((todo) => TodoWidget(todo: todo)).toList(),
             );
           }),
         ),
         AddTodoWidget()
+      ],
+    );
+  }
+}
+
+class TodoWidget extends StatelessWidget {
+  final Todo todo;
+
+  TodoWidget({super.key, required this.todo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Consumer<TodoListModel>(builder: (context, model, child) {
+          return TextButton(
+              onPressed: () {
+                model.delete(todo.number);
+              },
+              child: Icon(
+                Icons.circle_outlined,
+                size: 36,
+              ));
+        }),
+        Text(
+          todo.content,
+          style: TextStyle(fontSize: 36),
+        ),
       ],
     );
   }
@@ -88,28 +115,6 @@ class _AddTodoWidgetState extends State<AddTodoWidget> {
                 style: TextStyle(fontSize: 24),
               ));
         })
-      ],
-    );
-  }
-}
-
-class TodoWidget extends StatelessWidget {
-  final String content;
-
-  TodoWidget({super.key, this.content = ""});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          Icons.circle_outlined,
-          size: 36,
-        ),
-        Text(
-          content,
-          style: TextStyle(fontSize: 36),
-        ),
       ],
     );
   }
