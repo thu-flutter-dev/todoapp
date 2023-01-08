@@ -2,34 +2,6 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 
 void main() {
-  List<String> defaultTodoContents = [
-    "Todo0",
-    "Todo1",
-    "Todo2",
-    "Todo3",
-    "Todo4",
-    "Todo5",
-    "Todo6",
-    "Todo7",
-    "Todo8",
-    "Todo9",
-    "Todo10",
-    "Todo11",
-    "Todo12",
-    "Todo13",
-    "Todo14",
-    "Todo15",
-    "Todo16",
-    "Todo17",
-    "Todo18",
-    "Todo19",
-    "Todo20",
-    "Todo21",
-    "Todo22",
-    "Todo23",
-    "Todo24",
-  ];
-
   runApp(MyApp(defaultTodoContents: defaultTodoContents));
 }
 
@@ -66,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
           body: ContentWidget(
         todoList: todoList,
-        insertNewTodo: insert,
+        insert: insert,
       )),
       debugShowCheckedModeBanner: false,
     );
@@ -75,10 +47,9 @@ class _MyAppState extends State<MyApp> {
 
 class ContentWidget extends StatelessWidget {
   final TodoList todoList;
-  final ValueChanged<String> insertNewTodo;
+  final ValueChanged<String> insert;
 
-  ContentWidget(
-      {super.key, required this.todoList, required this.insertNewTodo});
+  ContentWidget({super.key, required this.todoList, required this.insert});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +64,7 @@ class ContentWidget extends StatelessWidget {
         ),
         AddTodoWidget(
           todoList: todoList,
-          insertNewTodo: insertNewTodo,
+          insert: insert,
         )
       ],
     );
@@ -102,10 +73,9 @@ class ContentWidget extends StatelessWidget {
 
 class AddTodoWidget extends StatefulWidget {
   final TodoList todoList;
-  final ValueChanged<String> insertNewTodo;
+  final ValueChanged<String> insert;
 
-  AddTodoWidget(
-      {super.key, required this.todoList, required this.insertNewTodo});
+  AddTodoWidget({super.key, required this.todoList, required this.insert});
 
   @override
   State<AddTodoWidget> createState() => _AddTodoWidgetState();
@@ -137,10 +107,7 @@ class _AddTodoWidgetState extends State<AddTodoWidget> {
         TextButton(
             onPressed: () {
               debugPrint("添加按钮按下 内容为${textFieldController.text}");
-              setState(() {
-                widget.insertNewTodo(textFieldController.text);
-                print(widget.todoList.data);
-              });
+              widget.insert(textFieldController.text);
               textFieldController.text = "";
             },
             child: Text(
