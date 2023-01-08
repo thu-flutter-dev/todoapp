@@ -32,12 +32,35 @@ class ContentWidget extends StatelessWidget {
                 .toList(),
           ),
         ),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '添加一条新的Todo',
+        AddTodoWidget()
+      ],
+    );
+  }
+}
+
+class AddTodoWidget extends StatelessWidget {
+  AddTodoWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: '新 Todo 的内容',
+            ),
           ),
-        )
+        ),
+        TextButton(
+            onPressed: () {
+              debugPrint("添加按钮按下");
+            },
+            child: Text(
+              "添加",
+              style: TextStyle(fontSize: 24),
+            ))
       ],
     );
   }
