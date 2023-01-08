@@ -71,6 +71,8 @@ class _AddTodoWidgetState extends State<AddTodoWidget> {
         TextButton(
             onPressed: () {
               debugPrint("添加按钮按下 内容为${textFieldController.text}");
+              todoList.insert(textFieldController.text);
+              textFieldController.text = "";
             },
             child: Text(
               "添加",
