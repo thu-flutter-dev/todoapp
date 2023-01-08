@@ -23,11 +23,22 @@ class ContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ListView(
-        children:
-            todoList.data.map((e) => TodoWidget(content: e.content)).toList(),
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            children: todoList.data
+                .map((e) => TodoWidget(content: e.content))
+                .toList(),
+          ),
+        ),
+        TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: '添加一条新的Todo',
+          ),
+        )
+      ],
     );
   }
 }
