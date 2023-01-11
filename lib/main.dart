@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
+
 import 'model.dart';
 
 void main() {
-  runApp(MyApp(defaultTodoContents: defaultTodoContents));
+  if (kDebugMode) {
+    runApp(MyApp(defaultTodoContents: defaultTodoContents));
+  } else {
+    runApp(MyApp(defaultTodoContents: []));
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -33,10 +39,19 @@ class ContentWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Consumer<TodoListModel>(builder: (context, model, child) {
-            return ListView(
-              children:
-                  model.data.map((todo) => TodoWidget(todo: todo)).toList(),
-            );
+            if (model.data.isNotEmpty) {
+              return ListView(
+                children:
+                    model.data.map((todo) => TodoWidget(todo: todo)).toList(),
+              );
+            } else {
+              return Center(
+                  child: Text(
+                "欢迎使用 TodoApp\n你可以在下方输入新的 Todo",
+                style: TextStyle(fontSize: 36),
+                textAlign: TextAlign.center,
+              ));
+            }
           }),
         ),
         AddTodoWidget()
