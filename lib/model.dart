@@ -31,7 +31,7 @@ class TodoListModel extends ChangeNotifier {
 
   TodoListModel({required this.todos, required this.database}) {
     if (todos.isNotEmpty) {
-      count = todos.map((e) => e.id).toList().reduce(max);
+      count = todos.map((e) => e.id).toList().reduce(max) + 1;
     }
   }
 
