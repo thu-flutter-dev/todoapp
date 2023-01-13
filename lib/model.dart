@@ -1,37 +1,74 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
+const String databaseName = "todo_db";
+const String tableName = "todos";
+final List<Todo> debugTodos = List.generate(16, (i) => Todo(i, "Todo $i"));
 
 class Todo {
-  int number = 0;
+  int id = 0;
   String content = "";
 
-  Todo(this.number, this.content);
+  Todo(this.id, this.content);
+
+  // Convert a Todo into a Map. The keys must correspond to the names of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'content': content,
+    };
+  }
 }
 
 class TodoListModel extends ChangeNotifier {
   // source of states
-  List<Todo> data = [];
+  List<Todo> todos;
+  Future<Database>? database;
   int count = 0;
 
-  TodoListModel(List<String> contents) {
-    List<Todo> data = [];
-    for (int i = 0; i < contents.length; i++) {
-      data.add(Todo(i, contents[i]));
+  TodoListModel({required this.todos, required this.database}) {
+    if (todos.isNotEmpty) {
+      count = todos.map((e) => e.id).toList().reduce(max);
     }
-    this.data = data;
   }
 
-  void insert(String content) {
-    data.add(Todo(count, content));
+  Future<void> insert(String content) async {
+    final todo = Todo(count, content);
+    todos.add(todo);
     count += 1;
     notifyListeners(); // re-build widgets
+
+    if (database != null) {
+      final db = await database!;
+
+      await db.insert(
+        tableName,
+        todo.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
-  void delete(int number) {
-    data.removeWhere((todo) {
-      return todo.number == number;
+  Future<void> delete(int id) async {
+    todos.removeWhere((todo) {
+      return todo.id == id;
     });
     notifyListeners(); // re-build widgets
+
+    if (database != null) {
+      final db = await database!;
+
+      // Remove the Todo from the database.
+      await db.delete(
+        tableName,
+        // Use a `where` clause to delete a specific todo.
+        where: 'id = ?',
+        // Pass the Todo's id as a whereArg to prevent SQL injection.
+        whereArgs: [id],
+      );
+    }
   }
 }
-
-List<String> defaultTodoContents = List.generate(25, (i) => "Todo $i");
