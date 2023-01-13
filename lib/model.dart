@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -26,8 +25,9 @@ class Todo {
 class TodoListModel extends ChangeNotifier {
   // source of states
   List<Todo> todos;
-  Future<Database>? database;
   int count = 0;
+
+  Future<Database>? database;
 
   TodoListModel({required this.todos, required this.database}) {
     if (todos.isNotEmpty) {
