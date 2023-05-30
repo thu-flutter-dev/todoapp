@@ -16,6 +16,7 @@ class TodoListModel extends ChangeNotifier {
     List<Todo> data = [];
     for (int i = 0; i < contents.length; i++) {
       data.add(Todo(i, contents[i]));
+      count += 1;
     }
     this.data = data;
   }
